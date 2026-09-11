@@ -10,6 +10,9 @@ capture/research -> canonical YAML -> validate/generate -> GeoJSON + GPX
 
 The repository deliberately has no custom UI, database, server, or two-way synchronization.
 
+Detailed map setup and iPhone navigation instructions are in
+[`USER_GUIDE.md`](USER_GUIDE.md).
+
 ## Quick start
 
 ```bash
