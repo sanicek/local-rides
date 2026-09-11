@@ -1,0 +1,29 @@
+name: Capture a local discovery
+description: Save a place, road, observation, or photo without structured GIS work.
+title: "[capture] "
+labels: [discovery]
+body:
+  - type: textarea
+    id: location
+    attributes:
+      label: Location or map link
+      description: Paste any shared map URL, coordinates, or rough description.
+  - type: textarea
+    id: interest
+    attributes:
+      label: What caught my attention
+  - type: textarea
+    id: access
+    attributes:
+      label: Access or surface observation
+      description: Record only what was observed; uncertainty is acceptable.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Photo or other context
+      description: Attach media directly or paste relevant links.
+  - type: dropdown
+    id: visited
+    attributes:
+      label: Visited now
+      options: ["No", "Yes", "Unclear"]

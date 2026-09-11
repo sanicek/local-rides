@@ -1,0 +1,6 @@
+[out:json][timeout:90];
+way
+  ["highway"~"^(track|path|service|unclassified|tertiary)$"]
+  ["surface"~"^(unpaved|gravel|fine_gravel|compacted|dirt|earth|ground|grass|mud|sand|pebblestone)$"]
+  ({{bbox}});
+out tags geom;

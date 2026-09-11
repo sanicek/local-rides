@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sanicek/local-rides/schemas/place.schema.json",
+  "title": "Local Rides place",
+  "type": "object",
+  "required": ["schema_version", "id", "kind", "name", "coordinates", "categories", "status", "scores", "access", "sources", "visits"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "kind": {"const": "place"},
+    "name": {"type": "string", "minLength": 1},
+    "coordinates": {
+      "type": "object",
+      "required": ["lat", "lon"],
+      "properties": {
+        "lat": {"type": "number", "minimum": -90, "maximum": 90},
+        "lon": {"type": "number", "minimum": -180, "maximum": 180}
+      },
+      "additionalProperties": false
+    },
+    "categories": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "status": {"enum": ["candidate", "shortlist", "visited", "rejected", "needs_research"]},
+    "scores": {"$ref": "#/$defs/scores"},
+    "access": {"$ref": "#/$defs/access"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
+    "notes": {"type": "string"},
+    "visits": {"type": "array", "items": {"$ref": "#/$defs/visit"}},
+    "rejection": {"$ref": "#/$defs/rejection"}
+  },
+  "$defs": {
+    "scores": {
+      "type": "object",
+      "required": ["destination", "road"],
+      "properties": {
+        "destination": {"type": "integer", "minimum": 1, "maximum": 5},
+        "road": {"type": "integer", "minimum": 1, "maximum": 5}
+      },
+      "additionalProperties": false
+    },
+    "access": {
+      "type": "object",
+      "required": ["motorcycle", "legal_confidence", "surface"],
+      "properties": {
+        "motorcycle": {"enum": ["yes", "no", "likely", "unknown"]},
+        "legal_confidence": {"enum": ["confirmed", "inferred", "unknown"]},
+        "surface": {"enum": ["paved", "gravel", "dirt", "mixed", "unknown"]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "ref": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "title": {"type": "string"},
+        "checked": {"type": "string", "format": "date"}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": ["text", "certainty", "source_refs"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "certainty": {"enum": ["confirmed", "inferred", "uncertain"]},
+        "source_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "visit": {
+      "type": "object",
+      "required": ["date"],
+      "properties": {
+        "date": {"type": "string", "format": "date"},
+        "notes": {"type": "string"},
+        "ride": {"type": "string"}
+      }
+    },
+    "rejection": {
+      "type": "object",
+      "required": ["reason"],
+      "properties": {
+        "reason": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

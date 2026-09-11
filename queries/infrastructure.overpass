@@ -1,0 +1,9 @@
+[out:json][timeout:60];
+(
+  nwr["man_made"~"^(water_well|water_works|pumping_station|tower|water_tower|chimney)$"]({{bbox}});
+  nwr["waterway"="dam"]({{bbox}});
+  nwr["bridge"]({{bbox}});
+  nwr["ford"]({{bbox}});
+  nwr["railway"~"^(abandoned|disused|razed)$"]({{bbox}});
+);
+out tags center geom;

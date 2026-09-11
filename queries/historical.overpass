@@ -1,0 +1,6 @@
+[out:json][timeout:60];
+(
+  nwr["historic"]({{bbox}});
+  nwr["amenity"="place_of_worship"]["historic"]({{bbox}});
+);
+out tags center geom;

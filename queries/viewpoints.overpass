@@ -1,0 +1,6 @@
+[out:json][timeout:60];
+(
+  nwr["tourism"="viewpoint"]({{bbox}});
+  nwr["natural"~"^(peak|cliff|cave_entrance|spring|rock|stone)$"]({{bbox}});
+);
+out tags center geom;
