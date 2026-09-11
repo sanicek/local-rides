@@ -50,6 +50,9 @@ The links use uMap's documented `dataUrl` preload mode, including support for
 multiple remote layers. They open an unsaved review map and do not need the
 reviewer's uMap login. See the
 [uMap preloading documentation](https://github.com/umap-project/umap/blob/master/docs-users/support/advanced.md).
+The default preview host is Framacarte, a public uMap instance verified with
+the repository's immutable GitHub URLs. Override it with `--instance` if a
+different uMap deployment has a working remote-data proxy.
 
 ## Canonical records
 

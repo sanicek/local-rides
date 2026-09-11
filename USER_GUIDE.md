@@ -257,3 +257,7 @@ They do not modify or create a saved map in the reviewer's uMap account. Crimson
 features are additions and dark-orange features are modifications. Review the
 popup provenance, scores, and access confidence before merging. After merge,
 the permanent remote layers obtain the accepted records from `main`.
+
+The generated review links currently use Framacarte, which runs uMap and does
+not require a login for an unsaved preview. This is independent of the saved
+uMap account used for permanent catalogue layers.

@@ -675,7 +675,7 @@ def build_parser() -> argparse.ArgumentParser:
     preview.add_argument("--repository", default="sanicek/local-rides", help="GitHub owner/repository")
     preview.add_argument("--base-sha", required=True, help="immutable base commit SHA")
     preview.add_argument("--head-sha", required=True, help="immutable review commit SHA")
-    preview.add_argument("--instance", default="https://umap.openstreetmap.fr/en/map/", help="uMap map URL")
+    preview.add_argument("--instance", default="https://framacarte.org/en/map/", help="uMap-compatible map URL")
     preview.add_argument("--review-path", default="generated/latest-discovery.geojson")
     gpx = subparsers.add_parser("gpx", help="export an ordered selection as GPX waypoints and route points")
     gpx.add_argument("--selection", type=Path, default=Path("selections/today.yaml"))
