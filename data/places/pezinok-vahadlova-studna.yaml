@@ -1,0 +1,42 @@
+schema_version: 1
+id: pezinok-vahadlova-studna
+kind: place
+name: Vahadlová studňa
+coordinates:
+  lat: 48.3036287
+  lon: 17.2602435
+categories: [water-well, historical, minor-infrastructure]
+status: needs_research
+scores:
+  destination: 3
+  road: 3
+access:
+  motorcycle: unknown
+  legal_confidence: unknown
+  surface: unpaved
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.3033758
+    lon: 17.2690983
+  notes: Route to mapped parking east of the well; inspect signs and walk the remaining section.
+sources:
+  - id: osm-well
+    type: osm
+    ref: node/1572877872
+    url: https://www.openstreetmap.org/node/1572877872
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: node/13314922992
+    url: https://www.openstreetmap.org/node/13314922992
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap identifies the target as a named water well and tourism attraction.
+    certainty: confirmed
+    source_refs: [osm-well]
+  - text: OpenStreetMap maps parking east of the target.
+    certainty: confirmed
+    source_refs: [osm-parking]
+notes: Deliberately obscure discovery candidate. Verify physical condition and walking access in the field.
+visits: []

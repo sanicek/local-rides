@@ -19,7 +19,7 @@ import yaml
 STATUSES = {"candidate", "shortlist", "visited", "rejected", "needs_research"}
 MOTORCYCLE_ACCESS = {"yes", "no", "likely", "unknown"}
 LEGAL_CONFIDENCE = {"confirmed", "inferred", "unknown"}
-SURFACES = {"paved", "gravel", "dirt", "mixed", "unknown"}
+SURFACES = {"paved", "unpaved", "gravel", "dirt", "mixed", "unknown"}
 CERTAINTIES = {"confirmed", "inferred", "uncertain"}
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 EXTERNAL_ID_TYPES = {"osm", "wikidata", "heritage_registry"}
@@ -142,6 +142,18 @@ def validate_record(record: Record, root: Path) -> list[str]:
                     or not -90 <= position[1] <= 90
                 ):
                     error(f"geometry.coordinates[{index}] must be [lon, lat] within valid ranges")
+
+    approach = data.get("approach")
+    if approach is not None:
+        approach = require_mapping(approach, "approach", errors)
+        if approach.get("mode") not in {"ride_to", "roadside", "park_and_walk"}:
+            error("approach.mode must be ride_to, roadside, or park_and_walk")
+        approach_coordinates = require_mapping(approach.get("coordinates"), "approach.coordinates", errors)
+        lat, lon = approach_coordinates.get("lat"), approach_coordinates.get("lon")
+        if not is_number(lat) or not -90 <= lat <= 90:
+            error("approach.coordinates.lat must be a finite number from -90 to 90")
+        if not is_number(lon) or not -180 <= lon <= 180:
+            error("approach.coordinates.lon must be a finite number from -180 to 180")
 
     sources = require_list(data.get("sources"), "sources", errors)
     source_ids: set[str] = set()
@@ -266,6 +278,9 @@ def feature(record: Record, order: int | None = None) -> dict[str, Any]:
         "notes": data.get("notes", ""),
         "source_urls": source_urls(data),
     }
+    if "approach" in data:
+        properties["approach_mode"] = data["approach"]["mode"]
+        properties["approach_notes"] = data["approach"].get("notes", "")
     if order is not None:
         properties["ride_order"] = order
     return {"type": "Feature", "id": data["id"], "geometry": geometry, "properties": properties}
@@ -306,7 +321,38 @@ def load_selection(root: Path, path: Path | None = None) -> tuple[dict[str, Any]
         errors.append(f"{selection_path}: items must be a list of record ids")
     elif len(items) != len(set(items)):
         errors.append(f"{selection_path}: items must not contain duplicates")
+    start = raw.get("start")
+    if start is not None:
+        if not isinstance(start, dict):
+            errors.append(f"{selection_path}: start must be a mapping")
+        else:
+            coordinates = start.get("coordinates")
+            if not isinstance(start.get("name"), str) or not start["name"].strip():
+                errors.append(f"{selection_path}: start.name must be a non-empty string")
+            if not isinstance(coordinates, dict):
+                errors.append(f"{selection_path}: start.coordinates must be a mapping")
+            else:
+                lat, lon = coordinates.get("lat"), coordinates.get("lon")
+                if not is_number(lat) or not -90 <= lat <= 90:
+                    errors.append(f"{selection_path}: start.coordinates.lat is invalid")
+                if not is_number(lon) or not -180 <= lon <= 180:
+                    errors.append(f"{selection_path}: start.coordinates.lon is invalid")
+    if not isinstance(raw.get("return_to_start", False), bool):
+        errors.append(f"{selection_path}: return_to_start must be true or false")
     return raw, errors
+
+
+def selection_start_feature(selection: dict[str, Any]) -> dict[str, Any] | None:
+    start = selection.get("start")
+    if not start:
+        return None
+    coordinates = start["coordinates"]
+    return {
+        "type": "Feature",
+        "id": "selection-start",
+        "geometry": {"type": "Point", "coordinates": [coordinates["lon"], coordinates["lat"]]},
+        "properties": {"id": "selection-start", "name": start["name"], "kind": "start", "ride_order": 0},
+    }
 
 
 def select_records(records: list[Record], selection: dict[str, Any], path: Path) -> tuple[list[Record], list[str]]:
@@ -353,11 +399,15 @@ def cmd_generate(root: Path) -> int:
     unvisited = [r for r in places if r.data["status"] in {"candidate", "shortlist", "needs_research"}]
     shortlist = [r for r in places if r.data["status"] == "shortlist"]
     roads = [r for r in records if r.data["kind"] == "road" and r.data["status"] != "rejected"]
+    today_features = [feature(record, order=index) for index, record in enumerate(selected, 1)]
+    start_feature = selection_start_feature(selection)
+    if start_feature:
+        today_features.insert(0, start_feature)
     today = {
         "type": "FeatureCollection",
         "name": selection["name"],
         "date": selection.get("date"),
-        "features": [feature(record, order=index) for index, record in enumerate(selected, 1)],
+        "features": today_features,
     }
     generated = root / "generated"
     write_json(generated / "places.geojson", collection(places))
@@ -406,6 +456,9 @@ def cmd_dedupe(root: Path) -> int:
 def route_positions(record: Record) -> list[tuple[float, float, str]]:
     data = record.data
     if data["kind"] == "place":
+        if "approach" in data:
+            coordinates = data["approach"]["coordinates"]
+            return [(coordinates["lat"], coordinates["lon"], data["name"])]
         return [(data["coordinates"]["lat"], data["coordinates"]["lon"], data["name"])]
     coordinates = data["geometry"]["coordinates"]
     return [
@@ -435,18 +488,26 @@ def cmd_gpx(root: Path, selection_path: Path, output: Path) -> int:
     ET.SubElement(metadata, "name").text = selection["name"]
     route = ET.SubElement(gpx, "rte")
     ET.SubElement(route, "name").text = selection["name"]
+    positions: list[tuple[float, float, str]] = []
+    if selection.get("start"):
+        start = selection["start"]
+        positions.append((start["coordinates"]["lat"], start["coordinates"]["lon"], start["name"]))
     for record in selected:
-        for lat, lon, name in route_positions(record):
-            waypoint = ET.SubElement(gpx, "wpt", {"lat": str(lat), "lon": str(lon)})
-            ET.SubElement(waypoint, "name").text = name
-            routepoint = ET.SubElement(route, "rtept", {"lat": str(lat), "lon": str(lon)})
-            ET.SubElement(routepoint, "name").text = name
+        positions.extend(route_positions(record))
+    if selection.get("return_to_start") and selection.get("start"):
+        start = selection["start"]
+        positions.append((start["coordinates"]["lat"], start["coordinates"]["lon"], f"{start['name']} — return"))
+    for lat, lon, name in positions:
+        waypoint = ET.SubElement(gpx, "wpt", {"lat": str(lat), "lon": str(lon)})
+        ET.SubElement(waypoint, "name").text = name
+        routepoint = ET.SubElement(route, "rtept", {"lat": str(lat), "lon": str(lon)})
+        ET.SubElement(routepoint, "name").text = name
     ET.indent(gpx, space="  ")
     output.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(gpx).write(output, encoding="utf-8", xml_declaration=True)
     with output.open("a", encoding="utf-8") as handle:
         handle.write("\n")
-    print(f"Wrote GPX route with {len(selected)} selected item(s) to {output}.")
+    print(f"Wrote GPX route with {len(selected)} selected item(s) and {len(positions)} route point(s) to {output}.")
     return 0
 
 

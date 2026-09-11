@@ -47,7 +47,7 @@
       "properties": {
         "motorcycle": {"enum": ["yes", "no", "likely", "unknown"]},
         "legal_confidence": {"enum": ["confirmed", "inferred", "unknown"]},
-        "surface": {"enum": ["paved", "gravel", "dirt", "mixed", "unknown"]}
+        "surface": {"enum": ["paved", "unpaved", "gravel", "dirt", "mixed", "unknown"]}
       }
     },
     "sources": {"type": "array"},

@@ -34,6 +34,11 @@ access:
   motorcycle: unknown
   legal_confidence: unknown
   surface: paved
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.11
+    lon: 17.11
 sources:
   - id: osm
     type: osm
@@ -81,7 +86,9 @@ class LocalRidesTest(unittest.TestCase):
         (self.root / "data/places/test-well.yaml").write_text(PLACE, encoding="utf-8")
         (self.root / "data/roads/test-road.yaml").write_text(ROAD, encoding="utf-8")
         (self.root / "selections/today.yaml").write_text(
-            "name: Test ride\ndate: 2026-09-11\nitems: [test-well, test-road]\n",
+            "name: Test ride\ndate: 2026-09-11\n"
+            "start:\n  name: Test start\n  coordinates: {lat: 48.0, lon: 17.0}\n"
+            "return_to_start: true\nitems: [test-well, test-road]\n",
             encoding="utf-8",
         )
 
@@ -98,8 +105,8 @@ class LocalRidesTest(unittest.TestCase):
         places = json.loads((self.root / "generated/places.geojson").read_text())
         today = json.loads((self.root / "generated/today.geojson").read_text())
         self.assertEqual([feature["id"] for feature in places["features"]], ["test-well"])
-        self.assertEqual([feature["id"] for feature in today["features"]], ["test-well", "test-road"])
-        self.assertEqual(today["features"][1]["properties"]["ride_order"], 2)
+        self.assertEqual([feature["id"] for feature in today["features"]], ["selection-start", "test-well", "test-road"])
+        self.assertEqual(today["features"][2]["properties"]["ride_order"], 2)
 
     def test_gpx_contains_place_and_road_endpoints(self) -> None:
         output = self.root / "rides/test.gpx"
@@ -107,8 +114,9 @@ class LocalRidesTest(unittest.TestCase):
         self.assertEqual(result, 0)
         document = ET.parse(output)
         namespace = {"g": "http://www.topografix.com/GPX/1/1"}
-        self.assertEqual(len(document.findall("g:wpt", namespace)), 3)
-        self.assertEqual(len(document.findall("g:rte/g:rtept", namespace)), 3)
+        self.assertEqual(len(document.findall("g:wpt", namespace)), 5)
+        self.assertEqual(len(document.findall("g:rte/g:rtept", namespace)), 5)
+        self.assertEqual(document.findall("g:wpt", namespace)[1].attrib["lat"], "48.11")
 
     def test_invalid_coordinate_fails(self) -> None:
         bad = PLACE.replace("lat: 48.1", "lat: 148.1")

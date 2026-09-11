@@ -74,6 +74,19 @@ visits: []
 
 Access values describe evidence, not permission. `motorcycle: likely` with `legal_confidence: unknown` is explicitly uncertain. Absence of an OSM restriction never proves legal access.
 
+Quote YAML values `"yes"` and `"no"`; PyYAML otherwise interprets them as booleans.
+
+When the target itself is not a suitable routing point, add an `approach` with a roadside or parking coordinate. GeoJSON retains the true target position; GPX uses the approach position.
+
+```yaml
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.1234
+    lon: 17.1234
+  notes: Use mapped parking and inspect signs locally.
+```
+
 ## Statuses and scores
 
 | Status | Meaning |
@@ -141,6 +154,10 @@ Write an ordered list of canonical IDs into `selections/today.yaml`:
 ```yaml
 name: Reservoir and ridge afternoon
 date: 2026-09-11
+start:
+  name: Bratislava centre
+  coordinates: {lat: 48.1486, lon: 17.1077}
+return_to_start: true
 items:
   - old-waterworks-001
   - ridge-gravel-001
@@ -162,4 +179,3 @@ It never merges automatically.
 ## Development boundary
 
 Apple Shortcuts, scheduled scans, direct Kurviger API use, and automatic issue processing remain deferred until the manual workflow exposes a repeated cost.
-

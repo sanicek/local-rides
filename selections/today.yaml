@@ -1,3 +1,14 @@
-name: No ride selected
-date: null
-items: []
+name: Kučišdorf and Pezinská Baba loop
+date: 2026-09-11
+start:
+  name: Bratislava centre
+  coordinates:
+    lat: 48.1486
+    lon: 17.1077
+return_to_start: true
+items:
+  - bernolakovo-stlp-hanby
+  - pezinok-vahadlova-studna
+  - kucisdorfska-priehrada
+  - modra-stur-injury-memorial
+  - pezinska-baba-503

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gpx version="1.1" creator="local-rides" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Kučišdorf and Pezinská Baba loop</name>
+  </metadata>
+  <rte>
+    <name>Kučišdorf and Pezinská Baba loop</name>
+    <rtept lat="48.1486" lon="17.1077">
+      <name>Bratislava centre</name>
+    </rtept>
+    <rtept lat="48.1995891" lon="17.2894132">
+      <name>Stĺp hanby, Bernolákovo</name>
+    </rtept>
+    <rtept lat="48.3033758" lon="17.2690983">
+      <name>Vahadlová studňa</name>
+    </rtept>
+    <rtept lat="48.3264054" lon="17.2603474">
+      <name>Kučišdorfská priehrada</name>
+    </rtept>
+    <rtept lat="48.318821" lon="17.3264366">
+      <name>Miesto poranenia Ľudovíta Štúra</name>
+    </rtept>
+    <rtept lat="48.3208088" lon="17.239285">
+      <name>Pezinská Baba, road II/503 — start</name>
+    </rtept>
+    <rtept lat="48.3617022" lon="17.1629469">
+      <name>Pezinská Baba, road II/503 — end</name>
+    </rtept>
+    <rtept lat="48.1486" lon="17.1077">
+      <name>Bratislava centre — return</name>
+    </rtept>
+  </rte>
+  <wpt lat="48.1486" lon="17.1077">
+    <name>Bratislava centre</name>
+  </wpt>
+  <wpt lat="48.1995891" lon="17.2894132">
+    <name>Stĺp hanby, Bernolákovo</name>
+  </wpt>
+  <wpt lat="48.3033758" lon="17.2690983">
+    <name>Vahadlová studňa</name>
+  </wpt>
+  <wpt lat="48.3264054" lon="17.2603474">
+    <name>Kučišdorfská priehrada</name>
+  </wpt>
+  <wpt lat="48.318821" lon="17.3264366">
+    <name>Miesto poranenia Ľudovíta Štúra</name>
+  </wpt>
+  <wpt lat="48.3208088" lon="17.239285">
+    <name>Pezinská Baba, road II/503 — start</name>
+  </wpt>
+  <wpt lat="48.3617022" lon="17.1629469">
+    <name>Pezinská Baba, road II/503 — end</name>
+  </wpt>
+  <wpt lat="48.1486" lon="17.1077">
+    <name>Bratislava centre — return</name>
+  </wpt>
+</gpx>

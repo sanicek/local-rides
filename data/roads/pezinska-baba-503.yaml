@@ -1,0 +1,73 @@
+schema_version: 1
+id: pezinska-baba-503
+kind: road
+name: Pezinská Baba, road II/503
+geometry:
+  type: LineString
+  coordinates:
+    - [17.2392850, 48.3208088]
+    - [17.2358899, 48.3250810]
+    - [17.2302018, 48.3293413]
+    - [17.2244083, 48.3355539]
+    - [17.2231561, 48.3381419]
+    - [17.2226667, 48.3414796]
+    - [17.2202053, 48.3447070]
+    - [17.2193175, 48.3475298]
+    - [17.2197772, 48.3493501]
+    - [17.2191899, 48.3514005]
+    - [17.2114701, 48.3487644]
+    - [17.2031121, 48.3483760]
+    - [17.1961378, 48.3524084]
+    - [17.1893913, 48.3503229]
+    - [17.1834382, 48.3554901]
+    - [17.1753193, 48.3563458]
+    - [17.1705533, 48.3609289]
+    - [17.1629469, 48.3617022]
+categories: [paved, curves, mountain-pass, scenic]
+status: shortlist
+scores:
+  destination: 1
+  road: 5
+access:
+  motorcycle: likely
+  legal_confidence: inferred
+  surface: paved
+direction: either
+difficulty: moderate
+sources:
+  - id: osm-31309339
+    type: osm
+    ref: way/31309339
+    url: https://www.openstreetmap.org/way/31309339
+    checked: 2026-09-11
+  - id: osm-240640929
+    type: osm
+    ref: way/240640929
+    url: https://www.openstreetmap.org/way/240640929
+    checked: 2026-09-11
+  - id: osm-240640930
+    type: osm
+    ref: way/240640930
+    url: https://www.openstreetmap.org/way/240640930
+    checked: 2026-09-11
+  - id: osm-25520821
+    type: osm
+    ref: way/25520821
+    url: https://www.openstreetmap.org/way/25520821
+    checked: 2026-09-11
+  - id: osm-25520822
+    type: osm
+    ref: way/25520822
+    url: https://www.openstreetmap.org/way/25520822
+    checked: 2026-09-11
+  - id: osm-380106146
+    type: osm
+    ref: way/380106146
+    url: https://www.openstreetmap.org/way/380106146
+    checked: 2026-09-11
+claims:
+  - text: The represented OSM ways form a continuous section of road II/503 and are tagged as secondary road; mapped sections are tagged asphalt.
+    certainty: confirmed
+    source_refs: [osm-31309339, osm-240640929, osm-240640930, osm-25520821, osm-25520822, osm-380106146]
+notes: The road is the main riding payoff. Current legality and closures still require normal road-sign compliance.
+visits: []

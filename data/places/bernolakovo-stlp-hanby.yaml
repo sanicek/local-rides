@@ -1,0 +1,46 @@
+schema_version: 1
+id: bernolakovo-stlp-hanby
+kind: place
+name: Stĺp hanby, Bernolákovo
+coordinates:
+  lat: 48.1995891
+  lon: 17.2894132
+categories: [pillory, historical, oddity]
+status: shortlist
+scores:
+  destination: 3
+  road: 2
+access:
+  motorcycle: likely
+  legal_confidence: inferred
+  surface: paved
+approach:
+  mode: roadside
+  coordinates:
+    lat: 48.1995891
+    lon: 17.2894132
+  notes: Village-centre roadside target; confirm legal parking locally.
+sources:
+  - id: osm-primary
+    type: osm
+    ref: node/54780117
+    url: https://www.openstreetmap.org/node/54780117
+    checked: 2026-09-11
+  - id: wikidata
+    type: wikidata
+    ref: Q112086124
+    url: https://www.wikidata.org/wiki/Q112086124
+    checked: 2026-09-11
+  - id: heritage-article
+    type: local_heritage
+    url: https://pamiatky.net/pamiatky/ostatne/bernolakovo-stlp-hanby/
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap identifies the object as a historic pillory and tourism attraction.
+    certainty: confirmed
+    source_refs: [osm-primary]
+  - text: The OSM description calls it a 2.5 m stone whipping post, probably from the 17th century.
+    certainty: uncertain
+    source_refs: [osm-primary, heritage-article]
+notes: Small peculiar first stop rather than a major destination.
+visits: []

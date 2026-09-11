@@ -26,7 +26,8 @@
     "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
     "notes": {"type": "string"},
     "visits": {"type": "array", "items": {"$ref": "#/$defs/visit"}},
-    "rejection": {"$ref": "#/$defs/rejection"}
+    "rejection": {"$ref": "#/$defs/rejection"},
+    "approach": {"$ref": "#/$defs/approach"}
   },
   "$defs": {
     "scores": {
@@ -44,7 +45,7 @@
       "properties": {
         "motorcycle": {"enum": ["yes", "no", "likely", "unknown"]},
         "legal_confidence": {"enum": ["confirmed", "inferred", "unknown"]},
-        "surface": {"enum": ["paved", "gravel", "dirt", "mixed", "unknown"]}
+        "surface": {"enum": ["paved", "unpaved", "gravel", "dirt", "mixed", "unknown"]}
       }
     },
     "source": {
@@ -83,6 +84,23 @@
       "properties": {
         "reason": {"type": "string", "minLength": 1},
         "date": {"type": "string", "format": "date"}
+      }
+    },
+    "approach": {
+      "type": "object",
+      "required": ["mode", "coordinates"],
+      "properties": {
+        "mode": {"enum": ["ride_to", "roadside", "park_and_walk"]},
+        "coordinates": {
+          "type": "object",
+          "required": ["lat", "lon"],
+          "properties": {
+            "lat": {"type": "number", "minimum": -90, "maximum": 90},
+            "lon": {"type": "number", "minimum": -180, "maximum": 180}
+          },
+          "additionalProperties": false
+        },
+        "notes": {"type": "string"}
       }
     }
   }

@@ -1,0 +1,46 @@
+schema_version: 1
+id: modra-stur-injury-memorial
+kind: place
+name: Miesto poranenia Ľudovíta Štúra
+coordinates:
+  lat: 48.3231324
+  lon: 17.3362152
+categories: [memorial, historical, oddity]
+status: shortlist
+scores:
+  destination: 4
+  road: 4
+access:
+  motorcycle: "no"
+  legal_confidence: inferred
+  surface: mixed
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.3188210
+    lon: 17.3264366
+  notes: Park at the mapped parking area and walk; a nearby asphalt service way is tagged motor_vehicle=no.
+sources:
+  - id: osm-memorial
+    type: osm
+    ref: node/624632668
+    url: https://www.openstreetmap.org/node/624632668
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: way/49218132
+    url: https://www.openstreetmap.org/way/49218132
+    checked: 2026-09-11
+  - id: local-history
+    type: local_history
+    url: https://pam.epocha.sk/pamatniky-zahorie/male-karpaty/ludovit-stur-zranenie-modra
+    checked: 2026-09-11
+claims:
+  - text: The site commemorates Štúr's fatal hunting injury of 22 December 1855.
+    certainty: confirmed
+    source_refs: [local-history]
+  - text: The original memorial was unveiled on 14 October 1956 and the site was rebuilt in 1986.
+    certainty: confirmed
+    source_refs: [local-history]
+notes: Strong small-story destination. Treat it as a short walk, not a motorcycle-access target.
+visits: []

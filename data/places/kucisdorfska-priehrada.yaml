@@ -1,0 +1,54 @@
+schema_version: 1
+id: kucisdorfska-priehrada
+kind: place
+name: Kučišdorfská priehrada
+coordinates:
+  lat: 48.326527
+  lon: 17.262833
+categories: [reservoir, dam, waterworks]
+status: shortlist
+scores:
+  destination: 3
+  road: 4
+access:
+  motorcycle: likely
+  legal_confidence: inferred
+  surface: unknown
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.3264054
+    lon: 17.2603474
+  notes: Route only to mapped parking west of the reservoir.
+sources:
+  - id: osm-reservoir
+    type: osm
+    ref: way/4345701
+    url: https://www.openstreetmap.org/way/4345701
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: way/1395834676
+    url: https://www.openstreetmap.org/way/1395834676
+    checked: 2026-09-11
+  - id: wikidata
+    type: wikidata
+    ref: Q63677250
+    url: https://www.wikidata.org/wiki/Q63677250
+    checked: 2026-09-11
+  - id: wikipedia-sk
+    type: wikipedia
+    url: https://sk.wikipedia.org/wiki/Vodná_nádrž_Kučišdorf
+    checked: 2026-09-11
+claims:
+  - text: The reservoir is in Pezinok cadastral territory near Kučišdorfská dolina and Unigal.
+    certainty: confirmed
+    source_refs: [wikipedia-sk]
+  - text: The reservoir covers about 7 hectares and is used as a fishing water.
+    certainty: confirmed
+    source_refs: [wikipedia-sk]
+  - text: OpenStreetMap maps parking west of the reservoir.
+    certainty: confirmed
+    source_refs: [osm-parking]
+notes: Short waterside stop that positions the ride for the northern vineyard and forest edge.
+visits: []
