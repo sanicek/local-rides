@@ -38,6 +38,22 @@ python -m unittest discover -s tests
 python tools/local_rides.py dedupe
 ```
 
+Generate a highlighted discovery batch and immutable uMap review links:
+
+```bash
+python tools/local_rides.py review --base-ref origin/main
+python tools/local_rides.py preview-url --base-sha BASE_COMMIT --head-sha HEAD_COMMIT
+```
+
+The first command writes `generated/latest-discovery.geojson`. Put both URLs printed by the second command into the discovery pull request description.
+The links use uMap's documented `dataUrl` preload mode, including support for
+multiple remote layers. They open an unsaved review map and do not need the
+reviewer's uMap login. See the
+[uMap preloading documentation](https://github.com/umap-project/umap/blob/master/docs-users/support/advanced.md).
+The default preview host is Framacarte, a public uMap instance verified with
+the repository's immutable GitHub URLs. Override it with `--instance` if a
+different uMap deployment has a working remote-data proxy.
+
 ## Canonical records
 
 Store one YAML object per file: points in `data/places/`, road or track segments in `data/roads/`. The schemas in `schemas/` document the format. The built-in validator is authoritative for CI and intentionally avoids a separate JSON Schema runtime dependency.

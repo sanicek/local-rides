@@ -130,6 +130,29 @@ class LocalRidesTest(unittest.TestCase):
         _, errors = local_rides.validate_all(self.root)
         self.assertTrue(any("duplicate external identity" in error for error in errors))
 
+    def test_review_projection_is_highlighted_and_self_describing(self) -> None:
+        output = self.root / "generated/latest-discovery.geojson"
+        result = local_rides.cmd_review(self.root, output, None, ["test-well"], ["test-road"])
+        self.assertEqual(result, 0)
+        review = json.loads(output.read_text())
+        by_id = {item["id"]: item for item in review["features"]}
+        self.assertEqual(by_id["test-well"]["properties"]["change_type"], "added")
+        self.assertEqual(by_id["test-well"]["properties"]["_umap_options"]["color"], "Crimson")
+        self.assertEqual(by_id["test-road"]["properties"]["_umap_options"]["color"], "DarkOrange")
+        self.assertIn("Motorcycle access: unknown", by_id["test-well"]["properties"]["description"])
+        self.assertIn("https://www.openstreetmap.org/node/123", by_id["test-well"]["properties"]["description"])
+
+    def test_umap_preview_urls_are_immutable_and_layered(self) -> None:
+        review, context = local_rides.umap_preview_urls(
+            "owner/repo", "base123", "head456", "https://umap.example/map/", "generated/review.geojson"
+        )
+        self.assertIn("head456%2Fgenerated%2Freview.geojson", review)
+        self.assertNotIn("base123", review)
+        self.assertEqual(context.count("dataUrl="), 3)
+        self.assertIn("base123%2Fgenerated%2Fplaces.geojson", context)
+        self.assertIn("base123%2Fgenerated%2Froads.geojson", context)
+        self.assertIn("head456%2Fgenerated%2Freview.geojson", context)
+
 
 if __name__ == "__main__":
     unittest.main()

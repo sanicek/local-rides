@@ -1,0 +1,42 @@
+schema_version: 1
+id: svaty-jur-vinohradnicka-rozhladna
+kind: place
+name: Rozhľadňa nad vinohradníckym skanzenom
+coordinates:
+  lat: 48.2511292
+  lon: 17.2044620
+categories: [viewpoint, observation-tower, winegrowing]
+status: needs_research
+scores:
+  destination: 3
+  road: 3
+access:
+  motorcycle: "no"
+  legal_confidence: unknown
+  surface: mixed
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.2487359
+    lon: 17.2131590
+  notes: Use the mapped parking area east of the vineyards and walk to the tower. Verify parking restrictions and the current foot route.
+sources:
+  - id: osm-tower
+    type: osm
+    ref: way/1324660373
+    url: https://www.openstreetmap.org/way/1324660373
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: node/895526464
+    url: https://www.openstreetmap.org/node/895526464
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap maps a four-metre observation tower above the winegrowing open-air museum.
+    certainty: confirmed
+    source_refs: [osm-tower]
+  - text: The suggested parking-to-tower approach is practical for a short visit.
+    certainty: uncertain
+    source_refs: [osm-parking, osm-tower]
+notes: Promising small viewpoint, but the approach and parking need field confirmation.
+visits: []

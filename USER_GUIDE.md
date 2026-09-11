@@ -243,3 +243,21 @@ Reference: [Mapy.com GPX help](https://help.mapy.com/).
 10. After riding, update canonical YAML statuses and observations, then regenerate
     the derived files.
 
+## Reviewing an agent discovery pull request
+
+A discovery pull request should contain two uMap links:
+
+- **Proposed features only** loads the highlighted records added or modified by
+  that discovery task.
+- **With catalogue context** loads the catalogue at the PR merge base, its road
+  segments, and the highlighted proposed records.
+
+Both views are temporary browser maps backed by immutable GitHub commit URLs.
+They do not modify or create a saved map in the reviewer's uMap account. Crimson
+features are additions and dark-orange features are modifications. Review the
+popup provenance, scores, and access confidence before merging. After merge,
+the permanent remote layers obtain the accepted records from `main`.
+
+The generated review links currently use Framacarte, which runs uMap and does
+not require a login for an unsaved preview. This is independent of the saved
+uMap account used for permanent catalogue layers.
