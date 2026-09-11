@@ -1,0 +1,34 @@
+schema_version: 1
+id: raca-v-koridor-stela
+kind: place
+name: Začatie stavby V. koridoru
+coordinates:
+  lat: 48.2090396
+  lon: 17.1607366
+categories: [memorial, railway, oddity]
+status: candidate
+scores:
+  destination: 2
+  road: 2
+access:
+  motorcycle: likely
+  legal_confidence: inferred
+  surface: paved
+approach:
+  mode: roadside
+  coordinates:
+    lat: 48.2090396
+    lon: 17.1607366
+  notes: The memorial is beside mapped residential and service roads. Confirm a legal stopping place on arrival.
+sources:
+  - id: osm-memorial
+    type: osm
+    ref: node/12919623968
+    url: https://www.openstreetmap.org/node/12919623968
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap identifies a memorial stele whose inscription records the start of construction of the Bratislava-Rača–Trnava V corridor in 2000.
+    certainty: confirmed
+    source_refs: [osm-memorial]
+notes: Very minor infrastructure oddity; useful as a quick urban detour rather than a destination ride.
+visits: []

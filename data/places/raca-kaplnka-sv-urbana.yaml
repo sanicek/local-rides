@@ -1,0 +1,46 @@
+schema_version: 1
+id: raca-kaplnka-sv-urbana
+kind: place
+name: Kaplnka sv. Urbana
+coordinates:
+  lat: 48.2030771
+  lon: 17.1329683
+categories: [wayside-shrine, winegrowing, historical]
+status: needs_research
+scores:
+  destination: 3
+  road: 3
+access:
+  motorcycle: unknown
+  legal_confidence: unknown
+  surface: mixed
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.2005322
+    lon: 17.1271920
+  notes: Route to the mapped street-side parking and continue on foot. Do not use the nearby private track.
+sources:
+  - id: osm-shrine
+    type: osm
+    ref: node/5235526393
+    url: https://www.openstreetmap.org/node/5235526393
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: way/1511550407
+    url: https://www.openstreetmap.org/way/1511550407
+    checked: 2026-09-11
+  - id: local-history
+    type: local_history
+    url: https://kriz.epocha.sk/kaplnky/bratislava/raca-kaplnka-sv-urbana-2016
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap maps the object as a wayside shrine named Kaplnka sv. Urbana.
+    certainty: confirmed
+    source_refs: [osm-shrine]
+  - text: The present chapel was built in 2016, replacing an older winegrowers' chapel documented by the late eighteenth century.
+    certainty: confirmed
+    source_refs: [local-history]
+notes: A compact Rača winegrowing-history target. Parking suitability and current signs need field verification.
+visits: []

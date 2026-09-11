@@ -1,0 +1,50 @@
+schema_version: 1
+id: svaty-jur-ray-wallace-allen-memorial
+kind: place
+name: Pamätník Ray Wallace Allen
+coordinates:
+  lat: 48.2542496
+  lon: 17.2270870
+categories: [war-memorial, aviation, historical]
+status: shortlist
+scores:
+  destination: 4
+  road: 3
+access:
+  motorcycle: "no"
+  legal_confidence: inferred
+  surface: mixed
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.2540175
+    lon: 17.2248080
+  notes: Park at the mapped parking area near Panónska and walk roughly 100 m east beside the railway. Verify parking signs.
+sources:
+  - id: osm-memorial
+    type: osm
+    ref: node/895526495
+    url: https://www.openstreetmap.org/node/895526495
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: way/184958865
+    url: https://www.openstreetmap.org/way/184958865
+    checked: 2026-09-11
+  - id: local-history
+    type: local_history
+    url: https://pam.epocha.sk/pamatniky-zahorie/male-karpaty/ray-wallace-allen-1944-svaty-jur
+    checked: 2026-09-11
+  - id: field-guide
+    type: memorial_registry
+    url: https://www.vets.cz/vpm/14828-pomnik-ray-wallace-allen/
+    checked: 2026-09-11
+claims:
+  - text: The memorial commemorates US fighter pilot Ray Wallace Allen, who died here on 26 June 1944.
+    certainty: confirmed
+    source_refs: [local-history, field-guide]
+  - text: The memorial was unveiled on 26 June 1994 after the aircraft and pilot's remains were recovered in 1990.
+    certainty: confirmed
+    source_refs: [local-history]
+notes: Strong obscure-story target. The object itself is reached on foot from the approach parking.
+visits: []

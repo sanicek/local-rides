@@ -40,3 +40,18 @@ Before committing canonical changes:
 3. Run `python tools/local_rides.py validate` again.
 4. Include regenerated output in the same commit.
 
+## Discovery pull requests
+
+For an agentic discovery task:
+
+1. Determine the target branch and merge-base commit.
+2. Research and write canonical records with provenance and explicit access uncertainty.
+3. Run validation, generation, and deduplication.
+4. Generate `generated/latest-discovery.geojson` containing only records added or materially modified by the task. Use `python tools/local_rides.py review --base-ref origin/main` in a Git checkout, or pass each id with `--added` or `--modified`.
+5. Commit canonical records and every generated projection.
+6. After the commit SHA is known, use `python tools/local_rides.py preview-url --base-sha BASE --head-sha HEAD`.
+7. Put both clickable uMap links in the pull request description: proposed features alone and proposed features with the base catalogue context.
+8. Include a candidate table, validation results, and unresolved access questions in the pull request description.
+9. Regenerate the review projection and replace the URLs after later discovery commits.
+
+The review projection is generated, not canonical. New features are crimson and modified features are dark orange. Never give an agent uMap session cookies or GitHub SSO credentials; uMap consumes the immutable raw GitHub URLs without authentication.

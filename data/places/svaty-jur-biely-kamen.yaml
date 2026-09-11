@@ -1,0 +1,51 @@
+schema_version: 1
+id: svaty-jur-biely-kamen
+kind: place
+name: Biely Kameň
+coordinates:
+  lat: 48.2611470
+  lon: 17.1965697
+categories: [castle-ruins, historical, forest]
+status: shortlist
+scores:
+  destination: 4
+  road: 3
+access:
+  motorcycle: "no"
+  legal_confidence: inferred
+  surface: mixed
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.2566733
+    lon: 17.2076984
+  notes: Leave the motorcycle at the mapped public asphalt parking in Svätý Jur and walk to the ruins. Do not route a motorcycle onto forest paths.
+sources:
+  - id: osm-ruins
+    type: osm
+    ref: way/150644741
+    url: https://www.openstreetmap.org/way/150644741
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: way/499453143
+    url: https://www.openstreetmap.org/way/499453143
+    checked: 2026-09-11
+  - id: castle-association
+    type: local_heritage
+    url: https://www.hradbielykamen.sk/
+    checked: 2026-09-11
+  - id: wikidata
+    type: wikidata
+    ref: Q3502157
+    url: https://www.wikidata.org/wiki/Q3502157
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap maps Biely Kameň as castle ruins and associates it with Wikidata Q3502157.
+    certainty: confirmed
+    source_refs: [osm-ruins, wikidata]
+  - text: A local association is actively caring for and restoring the castle site.
+    certainty: confirmed
+    source_refs: [castle-association]
+notes: The largest destination in this batch, retained as a park-and-walk stop rather than a motorcycle-access target.
+visits: []

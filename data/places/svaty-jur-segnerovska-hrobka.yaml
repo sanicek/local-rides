@@ -1,0 +1,43 @@
+schema_version: 1
+id: svaty-jur-segnerovska-hrobka
+kind: place
+name: Ségnerovská hrobka
+coordinates:
+  lat: 48.2533749
+  lon: 17.2167619
+categories: [tomb, cemetery, historical]
+status: candidate
+scores:
+  destination: 3
+  road: 2
+access:
+  motorcycle: "no"
+  legal_confidence: inferred
+  surface: paved
+approach:
+  mode: park_and_walk
+  coordinates:
+    lat: 48.2536393
+    lon: 17.2175476
+  notes: Park at the mapped cemetery parking and enter on foot. Respect cemetery opening hours and rules.
+sources:
+  - id: osm-tomb
+    type: osm
+    ref: way/1388107009
+    url: https://www.openstreetmap.org/way/1388107009
+    checked: 2026-09-11
+  - id: osm-parking
+    type: osm
+    ref: node/8445663234
+    url: https://www.openstreetmap.org/node/8445663234
+    checked: 2026-09-11
+  - id: heritage-register
+    type: heritage_registry
+    url: https://www.pamiatky.sk/evidencie-a-registre/register-po/detail-po?code=PO&detail_id=81b858fd-80e2-463f-bf58-aadf3e151187
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap identifies the object as the historic Ségnerovská hrobka and links it to the Slovak monuments register.
+    certainty: confirmed
+    source_refs: [osm-tomb, heritage-register]
+notes: Compact town stop that can be combined with the Allen memorial and vineyard tower.
+visits: []

@@ -7,10 +7,12 @@ import argparse
 import json
 import math
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
+from urllib.parse import urlencode
 from xml.etree import ElementTree as ET
 
 import yaml
@@ -23,6 +25,7 @@ SURFACES = {"paved", "unpaved", "gravel", "dirt", "mixed", "unknown"}
 CERTAINTIES = {"confirmed", "inferred", "uncertain"}
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 EXTERNAL_ID_TYPES = {"osm", "wikidata", "heritage_registry"}
+REVIEW_COLORS = {"added": "Crimson", "modified": "DarkOrange"}
 
 
 @dataclass(frozen=True)
@@ -286,6 +289,35 @@ def feature(record: Record, order: int | None = None) -> dict[str, Any]:
     return {"type": "Feature", "id": data["id"], "geometry": geometry, "properties": properties}
 
 
+def review_description(data: dict[str, Any], change_type: str) -> str:
+    scores = data["scores"]
+    access = data["access"]
+    lines = [
+        f"Change: {change_type}",
+        f"Status: {data['status']}",
+        f"Destination: {scores['destination']}/5",
+        f"Road: {scores['road']}/5",
+        f"Motorcycle access: {access['motorcycle']}",
+        f"Legal confidence: {access['legal_confidence']}",
+        f"Surface: {access['surface']}",
+    ]
+    if data.get("notes"):
+        lines.extend(["", str(data["notes"])])
+    urls = source_urls(data)
+    if urls:
+        lines.extend(["", "Sources:", *urls])
+    return "\n".join(lines)
+
+
+def review_feature(record: Record, change_type: str) -> dict[str, Any]:
+    item = feature(record)
+    properties = item["properties"]
+    properties["change_type"] = change_type
+    properties["description"] = review_description(record.data, change_type)
+    properties["_umap_options"] = {"color": REVIEW_COLORS[change_type]}
+    return item
+
+
 def collection(records: Iterable[Record]) -> dict[str, Any]:
     return {"type": "FeatureCollection", "features": [feature(r) for r in sorted(records, key=lambda x: x.id)]}
 
@@ -419,6 +451,122 @@ def cmd_generate(root: Path) -> int:
     return 0
 
 
+def changed_record_ids(root: Path, base_ref: str) -> tuple[dict[str, str], list[str]]:
+    command = [
+        "git",
+        "diff",
+        "--name-status",
+        f"{base_ref}...HEAD",
+        "--",
+        "data/places",
+        "data/roads",
+    ]
+    result = subprocess.run(command, cwd=root, text=True, capture_output=True, check=False)
+    if result.returncode:
+        detail = result.stderr.strip() or result.stdout.strip() or "git diff failed"
+        return {}, [f"cannot compare with {base_ref!r}: {detail}"]
+    changes: dict[str, str] = {}
+    errors: list[str] = []
+    for line in result.stdout.splitlines():
+        fields = line.split("\t")
+        status = fields[0]
+        path_text = fields[-1]
+        if status.startswith("D") or not path_text.endswith(".yaml"):
+            continue
+        path = root / path_text
+        if not path.exists():
+            errors.append(f"changed record does not exist: {path_text}")
+            continue
+        try:
+            raw = yaml_load(path)
+        except ValueError as exc:
+            errors.append(f"{path_text}: {exc}")
+            continue
+        if not isinstance(raw, dict) or not isinstance(raw.get("id"), str):
+            errors.append(f"{path_text}: changed record has no valid id")
+            continue
+        changes[raw["id"]] = "added" if status.startswith("A") else "modified"
+    return changes, errors
+
+
+def cmd_review(
+    root: Path,
+    output: Path,
+    base_ref: str | None,
+    added_ids: list[str],
+    modified_ids: list[str],
+) -> int:
+    records, errors = validate_all(root)
+    changes: dict[str, str] = {}
+    if base_ref:
+        changes, change_errors = changed_record_ids(root, base_ref)
+        errors.extend(change_errors)
+    for record_id in added_ids:
+        changes[record_id] = "added"
+    for record_id in modified_ids:
+        if changes.get(record_id) == "added":
+            errors.append(f"review id {record_id!r} cannot be both added and modified")
+        else:
+            changes[record_id] = "modified"
+
+    by_id = {record.id: record for record in records}
+    for record_id in changes:
+        if record_id not in by_id:
+            errors.append(f"unknown review id {record_id!r}")
+    if not changes:
+        errors.append("review contains no added or modified record ids")
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        return 1
+
+    features = [review_feature(by_id[record_id], changes[record_id]) for record_id in sorted(changes)]
+    value = {
+        "type": "FeatureCollection",
+        "name": "Latest discovery review",
+        "features": features,
+    }
+    write_json(output, value)
+    print(f"Generated uMap review projection with {len(features)} feature(s) at {output}.")
+    return 0
+
+
+def umap_preview_urls(
+    repository: str,
+    base_sha: str,
+    head_sha: str,
+    instance: str,
+    review_path: str,
+) -> tuple[str, str]:
+    raw = f"https://raw.githubusercontent.com/{repository}"
+    review_url = f"{raw}/{head_sha}/{review_path}"
+    review_query = urlencode([("dataUrl", review_url), ("dataFormat", "geojson")])
+    review_only = f"{instance.rstrip('/')}/?{review_query}"
+    context_query = urlencode(
+        [
+            ("dataUrl", f"{raw}/{base_sha}/generated/places.geojson"),
+            ("dataUrl", f"{raw}/{base_sha}/generated/roads.geojson"),
+            ("dataUrl", review_url),
+            ("dataFormat", "geojson"),
+        ]
+    )
+    context = f"{instance.rstrip('/')}/?{context_query}"
+    return review_only, context
+
+
+def cmd_preview_url(
+    repository: str,
+    base_sha: str,
+    head_sha: str,
+    instance: str,
+    review_path: str,
+) -> int:
+    review_only, context = umap_preview_urls(repository, base_sha, head_sha, instance, review_path)
+    print(f"Review only: {review_only}")
+    print(f"With catalogue context: {context}")
+    return 0
+
+
 def haversine_m(a: Record, b: Record) -> float:
     lat1 = math.radians(a.data["coordinates"]["lat"])
     lat2 = math.radians(b.data["coordinates"]["lat"])
@@ -518,6 +666,17 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate", help="validate all canonical records and the current selection")
     subparsers.add_parser("generate", help="regenerate committed GeoJSON views")
     subparsers.add_parser("dedupe", help="report possible nearby duplicate places")
+    review = subparsers.add_parser("review", help="generate a highlighted GeoJSON projection for PR review")
+    review.add_argument("--base-ref", help="git ref to compare with HEAD, for example origin/main")
+    review.add_argument("--added", action="append", default=[], help="canonical id added by the discovery batch")
+    review.add_argument("--modified", action="append", default=[], help="canonical id modified by the discovery batch")
+    review.add_argument("--output", type=Path, default=Path("generated/latest-discovery.geojson"))
+    preview = subparsers.add_parser("preview-url", help="print immutable uMap links for a discovery review")
+    preview.add_argument("--repository", default="sanicek/local-rides", help="GitHub owner/repository")
+    preview.add_argument("--base-sha", required=True, help="immutable base commit SHA")
+    preview.add_argument("--head-sha", required=True, help="immutable review commit SHA")
+    preview.add_argument("--instance", default="https://umap.openstreetmap.fr/en/map/", help="uMap map URL")
+    preview.add_argument("--review-path", default="generated/latest-discovery.geojson")
     gpx = subparsers.add_parser("gpx", help="export an ordered selection as GPX waypoints and route points")
     gpx.add_argument("--selection", type=Path, default=Path("selections/today.yaml"))
     gpx.add_argument("--output", type=Path, required=True)
@@ -533,6 +692,11 @@ def main() -> int:
         return cmd_generate(root)
     if args.command == "dedupe":
         return cmd_dedupe(root)
+    if args.command == "review":
+        output = args.output if args.output.is_absolute() else root / args.output
+        return cmd_review(root, output, args.base_ref, args.added, args.modified)
+    if args.command == "preview-url":
+        return cmd_preview_url(args.repository, args.base_sha, args.head_sha, args.instance, args.review_path)
     selection = args.selection if args.selection.is_absolute() else root / args.selection
     output = args.output if args.output.is_absolute() else root / args.output
     return cmd_gpx(root, selection, output)

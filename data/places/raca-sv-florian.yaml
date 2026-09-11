@@ -1,0 +1,41 @@
+schema_version: 1
+id: raca-sv-florian
+kind: place
+name: Socha sv. Floriána
+coordinates:
+  lat: 48.2153075
+  lon: 17.1552691
+categories: [statue, memorial, historical]
+status: candidate
+scores:
+  destination: 3
+  road: 2
+access:
+  motorcycle: likely
+  legal_confidence: inferred
+  surface: paved
+approach:
+  mode: roadside
+  coordinates:
+    lat: 48.2153075
+    lon: 17.1552691
+  notes: Urban roadside target. Use only a legal nearby stopping place.
+sources:
+  - id: osm-statue
+    type: osm
+    ref: way/972358019
+    url: https://www.openstreetmap.org/way/972358019
+    checked: 2026-09-11
+  - id: local-history
+    type: local_history
+    url: https://kriz.epocha.sk/sochy-svatych/sochy-svatych/sochy-svatych-bratislava/raca-sv-florian-1721
+    checked: 2026-09-11
+claims:
+  - text: OpenStreetMap records the stone statue as a historic memorial dating from 1721.
+    certainty: confirmed
+    source_refs: [osm-statue]
+  - text: The local monument catalogue identifies the figure as Saint Florian and dates it to 1721.
+    certainty: confirmed
+    source_refs: [local-history]
+notes: Small historic object that pairs naturally with the two other Rača discoveries.
+visits: []
